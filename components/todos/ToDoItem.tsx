@@ -13,15 +13,15 @@ type ToDoItemProps = {
 
 export default function ToDoItem({ onDelete, todo }: ToDoItemProps) {
   return (
-    <div>
-      <Item className="grid grid-cols-4 w-full md:w-175 max-w-xl justify-between">
+    <div className="group">
+      <Item className="grid grid-cols-4 md:w-175 max-w-xl justify-between w-80">
         <div className="flex flex-col col-span-3 col-start-1">
           <ItemTitle>{todo.task}</ItemTitle>
           <ItemDescription className="flex mt-1 break-normal text-muted-foreground">
             {todo.notes ?? null}
           </ItemDescription>
         </div>
-        <ItemActions className="col-span-1 col-start-4 justify-self-end">
+        <ItemActions className="col-span-1 col-start-4 justify-self-end opacity-50 group-hover:opacity-100 transition-opacity">
           <form>
             <input name="id" type="hidden" value={todo.id} />
 

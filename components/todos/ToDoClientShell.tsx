@@ -3,10 +3,17 @@
 import PrioritizeButton from "@/components/PrioritizeButton";
 import TaskInputForm from "@/components/todos/TaskInputForm";
 import ToDoList from "@/components/todos/ToDoList";
-import { Card, CardFooter } from "@/components/ui/card";
-import { addTask, deleteTask } from "@/lib/actions";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { addTask, deleteTask, prioritize } from "@/lib/actions";
 import { AddTaskState, DeleteTaskState, Task } from "@/lib/types";
 import { useActionState, useTransition } from "react";
+import { toast } from "sonner";
 
 type ToDoClientShellProps = {
   todos: Task[];
@@ -24,31 +31,43 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
     null,
   );
 
+  function handlePrioritise() {
+    startPrioritising(async () => {
+      await prioritize();
+      toast("refreshing list");
+    });
+  }
+
   const isBusy = isPrioritising || isAdding || isDeleting;
 
   return (
     <div className="flex flex-col items-center">
       <Card className="flex flex-col items-center justify-center mt-6 px-6 md:w-175 w-96">
-        <h1 className="text-3xl">To Do</h1>
-        {todos.length === 0 ? <p>Start by adding a task!</p> : null}
+        <CardHeader className="md:w-125 text-center mt-9 w-96">
+          {todos.length === 0 ? (
+            <CardDescription>Start by adding a task!</CardDescription>
+          ) : null}
+        </CardHeader>
         <ToDoList
           todos={todos}
           deleteState={deleteState}
           onDelete={onDelete}
           isDeleting={isDeleting}
+          isPrioritising={isPrioritising}
         />
         <TaskInputForm
           isBusy={isBusy}
           state={addState}
           formAction={addTaskAction}
         />
+
         <CardFooter>
           {todos.length === 0 ? null : (
             <div>
               <PrioritizeButton
                 isBusy={isBusy}
                 isPrioritising={isPrioritising}
-                startPrioritising={startPrioritising}
+                handlePrioritise={handlePrioritise}
               />
             </div>
           )}

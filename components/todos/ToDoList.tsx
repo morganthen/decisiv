@@ -10,6 +10,7 @@ type ToDoListProps = {
   todos: Task[];
   onDelete: (formData: FormData) => void;
   isDeleting: boolean;
+  isPrioritising: boolean;
 };
 
 export default function ToDoList({
@@ -17,6 +18,7 @@ export default function ToDoList({
   onDelete,
   isDeleting,
   todos,
+  isPrioritising,
 }: ToDoListProps) {
   useEffect(() => {
     if (isDeleting === true)
@@ -28,10 +30,14 @@ export default function ToDoList({
   }, [deleteState, isDeleting]);
 
   return (
-    <div>
+    <div className="relative flex flex-col items-center w-full">
       {todos.map((todo) => (
         <ToDoItem onDelete={onDelete} key={todo.id} todo={todo} />
       ))}
+
+      {isPrioritising && (
+        <div className="absolute inset-0 bg-background/50 backdrop-blur-sm rounded-l-lg animate-pulse" />
+      )}
     </div>
   );
 }
