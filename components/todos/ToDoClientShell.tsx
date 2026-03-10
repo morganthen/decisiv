@@ -43,7 +43,7 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
   return (
     <div className="flex md:flex-row-reverse md:gap-4 lg:gap-20 items-center flex-col">
       <Timer />
-      <Card className="flex flex-col items-center justify-center lg:w-175 md:w-125 w-96 ">
+      <Card className="flex flex-col items-center justify-center lg:w-175 md:w-125 w-96 my-10">
         {todos.length === 0 ? (
           <CardHeader className="md:w-125 text-center mt-9 w-96">
             <CardDescription>add a few tasks to begin...</CardDescription>

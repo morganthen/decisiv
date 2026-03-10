@@ -13,7 +13,7 @@ export default async function MainLayout({
   } = await supabase.auth.getUser();
   return (
     <div className="min-h-dvh bg-background flex flex-col ">
-      <header className="bg-card grid md:grid-cols-3 grid-cols-2 px-6 py-4 border-b">
+      <header className="bg-card grid md:grid-cols-3 grid-cols-2 px-6 py-4 border-b  items-center justify-between">
         <span className="text-sm text-muted-foreground hidden md:inline">
           {user?.email}
         </span>

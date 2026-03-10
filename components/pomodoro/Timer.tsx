@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { ButtonGroup } from "../ui/button-group";
 import { Badge } from "../ui/badge";
 import { logSessionDuration } from "@/lib/actions";
 import { toast } from "sonner";
-import { playSound } from "@/lib/helpers";
 import { Volume2, VolumeX } from "lucide-react";
 
 const presetSeconds = {
@@ -32,6 +31,30 @@ export default function Timer() {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [soundOn, setSoundOn] = useState(true);
 
+  const clickAudio = useRef<HTMLAudioElement | null>(null);
+  const successAudio = useRef<HTMLAudioElement | null>(null);
+  const pauseAudio = useRef<HTMLAudioElement | null>(null);
+  const resumeAudio = useRef<HTMLAudioElement | null>(null);
+  const resetAudio = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    clickAudio.current = new Audio("/sounds/click.mp3");
+    successAudio.current = new Audio("/sounds/success.mp3");
+    pauseAudio.current = new Audio("/sounds/pause.mp3");
+    resumeAudio.current = new Audio("/sounds/resume.mp3");
+    resetAudio.current = new Audio("/sounds/reset.mp3");
+    // Optionally call .load() on each
+  }, []);
+
+  function playSound(
+    ref: React.RefObject<HTMLAudioElement | null>,
+    soundOn: boolean,
+  ) {
+    if (!soundOn || !ref.current) return;
+    ref.current.currentTime = 0;
+    ref.current.play();
+  }
+
   useEffect(() => {
     if (isRunning) {
       const interval = setInterval(() => {
@@ -50,7 +73,7 @@ export default function Timer() {
 
   useEffect(() => {
     if (status === "completed" && startTime) {
-      playSound("/sounds/success.mp3", soundOn);
+      playSound(successAudio, soundOn);
       const endTime = new Date();
       const duration = Math.floor(
         (endTime.getTime() - startTime.getTime()) / 1000,
@@ -71,7 +94,7 @@ export default function Timer() {
         setStartTime(null);
       })();
     }
-  }, [status, startTime]);
+  }, [status, startTime, soundOn]);
 
   function formatTime(seconds: number) {
     const minutes = Math.floor(seconds / 60);
@@ -85,18 +108,18 @@ export default function Timer() {
       status === "stopped" ||
       status === "completed"
     ) {
-      playSound("/sounds/click.mp3", soundOn);
+      playSound(clickAudio, soundOn);
       setSeconds(initialSeconds); // Only reset for a new session
       setIsRunning(true);
       setStatus("running");
       setStartTime(new Date());
     } else if (status === "paused") {
-      playSound("/sounds/resume.mp3", soundOn);
+      playSound(resumeAudio, soundOn);
       setIsRunning(true);
       setStatus("running");
       // Do NOT reset seconds or startTime here
     } else if (status === "running") {
-      playSound("/sounds/pause.mp3", soundOn);
+      playSound(pauseAudio, soundOn);
 
       setIsRunning(false);
       setStatus("paused");
@@ -104,7 +127,7 @@ export default function Timer() {
   }
 
   function handleReset() {
-    playSound("/sounds/reset.mp3", soundOn);
+    playSound(resetAudio, soundOn);
     setIsRunning(false);
     setSeconds(initialSeconds);
     setStatus("not started");
@@ -112,7 +135,7 @@ export default function Timer() {
   }
 
   function handleSelectPreset(seconds: number) {
-    playSound("/sounds/click.mp3", soundOn);
+    playSound(clickAudio, soundOn);
     setIsRunning(false);
     setSeconds(seconds);
     setStatus("not started");
@@ -120,7 +143,7 @@ export default function Timer() {
   }
 
   async function handleEnd() {
-    playSound("/sounds/success.mp3", soundOn);
+    playSound(successAudio, soundOn);
     setIsRunning(false);
     // setSeconds(initialSeconds);
     setStatus("stopped");

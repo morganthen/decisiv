@@ -53,9 +53,3 @@ export async function fetchPriorities({ todos }: fetchPrioritiesType) {
     console.log(err);
   }
 }
-
-export function playSound(src: string, soundOn: boolean) {
-  if (!soundOn) return;
-  const audio = new Audio(src);
-  audio.play();
-}
