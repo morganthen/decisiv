@@ -8,12 +8,12 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { addTask, deleteTask, prioritize } from "@/lib/actions";
 import { AddTaskState, DeleteTaskState, Task } from "@/lib/types";
 import { useActionState, useTransition } from "react";
 import { toast } from "sonner";
+import Timer from "../pomodoro/Timer";
 
 type ToDoClientShellProps = {
   todos: Task[];
@@ -41,13 +41,14 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
   const isBusy = isPrioritising || isAdding || isDeleting;
 
   return (
-    <div className="flex flex-col items-center">
-      <Card className="flex flex-col items-center justify-center mt-6 px-6 md:w-175 w-96">
-        <CardHeader className="md:w-125 text-center mt-9 w-96">
-          {todos.length === 0 ? (
-            <CardDescription>Start by adding a task!</CardDescription>
-          ) : null}
-        </CardHeader>
+    <div className="flex md:flex-row-reverse md:gap-4 lg:gap-20 items-center flex-col">
+      <Timer />
+      <Card className="flex flex-col items-center justify-center lg:w-175 md:w-125 w-96 ">
+        {todos.length === 0 ? (
+          <CardHeader className="md:w-125 text-center mt-9 w-96">
+            <CardDescription>add a few tasks to begin...</CardDescription>
+          </CardHeader>
+        ) : null}
         <ToDoList
           todos={todos}
           deleteState={deleteState}
@@ -62,7 +63,7 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
         />
 
         <CardFooter>
-          {todos.length === 0 ? null : (
+          {todos.length < 2 ? null : (
             <div>
               <PrioritizeButton
                 isBusy={isBusy}

@@ -23,8 +23,8 @@ function LoginForm() {
   const message = searchParams.get("message");
 
   return (
-    <div className="h-dvh bg-background flex flex-col justify-center">
-      <Card className="mx-10">
+    <div className="h-dvh bg-background flex flex-col justify-center items-center">
+      <Card className="mx-10 md:w-125 w-100">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
@@ -67,7 +67,7 @@ function LoginForm() {
               {message === "check-email" ? (
                 <p>Check email for verification before logging in</p>
               ) : null}
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={isPending}>
                 {isPending ? "Logging in..." : "Login"}
               </Button>
             </CardFooter>

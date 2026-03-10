@@ -98,3 +98,27 @@ export async function prioritize() {
   revalidatePath("/todo");
   return { success: true };
 }
+
+export async function logSessionDuration(duration: number) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { success: false, error: "not authenticated" };
+
+  const { error } = await supabase.from("work_sessions").insert({
+    user_id: user.id,
+    duration,
+  });
+
+  if (error) {
+    console.error("we encountered a problem logging session duration");
+    return {
+      success: false,
+      error: "a problem occured logging session duration",
+    };
+  }
+  revalidatePath("/todo");
+  return { success: true };
+}

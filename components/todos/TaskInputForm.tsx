@@ -35,7 +35,7 @@ export default function TaskInputForm({
   }, [state]);
 
   return (
-    <div className="md:w-125 w-80 flex flex-col justify-center">
+    <div className="md:w-105 lg:w-145 w-80 flex flex-col justify-center">
       <Card>
         <form action={formAction} ref={formRef}>
           <CardContent>

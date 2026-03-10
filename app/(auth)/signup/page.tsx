@@ -32,8 +32,8 @@ export default function SignUp() {
   }
 
   return (
-    <div className="h-dvh bg-background flex flex-col justify-center relative">
-      <Card className="mx-10">
+    <div className="h-dvh bg-background flex flex-col justify-center relative items-center">
+      <Card className="mx-10 md:w-125 w-100">
         <CardHeader>
           <CardTitle>Sign up for an account</CardTitle>
           <CardDescription>
@@ -95,7 +95,13 @@ export default function SignUp() {
             {confirmPasswordTouched && !validatePassword() && (
               <p>Passwords do not match</p>
             )}
-            <Button type="submit" className="w-full mt-6">
+            <Button
+              type="submit"
+              className="w-full mt-6"
+              disabled={
+                isPending || (confirmPasswordTouched && !validatePassword())
+              }
+            >
               {isPending ? "Signing up..." : "Sign Up"}
             </Button>
           </form>

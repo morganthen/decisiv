@@ -36,7 +36,7 @@ export default function ToDoList({
       ))}
 
       {isPrioritising && (
-        <div className="absolute inset-0 bg-background/50 backdrop-blur-sm rounded-l-lg animate-pulse" />
+        <div className="absolute inset-0 bg-background/20 backdrop-blur-sm rounded-l-lg animate-pulse" />
       )}
     </div>
   );

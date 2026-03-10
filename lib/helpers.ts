@@ -34,7 +34,7 @@ export async function fetchPriorities({ todos }: fetchPrioritiesType) {
           messages: [
             {
               role: "user",
-              content: `Today is ${formattedDate}. Here is a list of tasks:\n${formattedTasks}\nPlease assign a priority score (1 = highest, N = lowest) to each task. Also assign a short explanation as to why you have decided this sequence of importance. Keep the thinking to yourself and ONLY return a JSON object mapping task ids to scores and their respective explanation. This is the shape of the JSON object i require:\n{
+              content: `Today is ${formattedDate}. Here is a list of tasks:\n${formattedTasks}\nPlease assign a priority score (1 = highest, N = lowest) to each task. Also assign a short explanation as to why you have decided this sequence of importance. Keep the thinking to yourself and ONLY return a JSON object mapping task ids to scores and their respective explanation. Keep the explanations under 30 words. This is the shape of the JSON object I require:\n{
                 "id1": { "score": 1, "explanation": "..." },
                 "id2": { "score": 2, "explanation": "..." }
                 }\nRemember no fluff, JUST the JSON object mapping task ids to scores and their respective explanation.`,
@@ -52,4 +52,10 @@ export async function fetchPriorities({ todos }: fetchPrioritiesType) {
     console.error(err);
     console.log(err);
   }
+}
+
+export function playSound(src: string, soundOn: boolean) {
+  if (!soundOn) return;
+  const audio = new Audio(src);
+  audio.play();
 }
