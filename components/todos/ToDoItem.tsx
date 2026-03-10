@@ -5,7 +5,8 @@ import { Item, ItemActions, ItemDescription, ItemTitle } from "../ui/item";
 import { Trash } from "lucide-react";
 
 import { Task } from "@/lib/types";
-import { Checkbox } from "../ui/checkbox";
+import { toggleDone } from "@/lib/actions";
+import { useRef, useState } from "react";
 
 type ToDoItemProps = {
   onDelete: (formData: FormData) => void;
@@ -13,12 +14,36 @@ type ToDoItemProps = {
 };
 
 export default function ToDoItem({ onDelete, todo }: ToDoItemProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [checked, setChecked] = useState(todo.completed);
+
+  function handleSubmit() {
+    formRef.current?.requestSubmit();
+    setChecked((prev) => !prev);
+  }
+
   return (
     <div className="group">
       <Item className="grid grid-cols-5 md:w-105 max-w-xl justify-between lg:w-145 w-90">
-        <Checkbox className="col-span-1 col-start-1 opacity-50 group-hover:opacity-100 transition-opacity m-0 p-0" />
-        <div className="flex flex-col col-span-3 col-start-2">
-          <ItemTitle>{todo.task}</ItemTitle>
+        <form
+          ref={formRef}
+          action={async (formData: FormData) => {
+            const checked = formData.get("completed") === "on";
+            await toggleDone(todo.id, checked);
+          }}
+        >
+          <input
+            type="checkbox"
+            name="completed"
+            className="col-span-1 col-start-1 opacity-50 group-hover:opacity-100 transition-opacity accent-primary m-0 p-0"
+            defaultChecked={todo.completed}
+            onChange={() => handleSubmit()}
+          />
+        </form>
+        <div className="flex flex-col col-span-3 col-start-2 ">
+          <ItemTitle className={checked ? "line-through" : ""}>
+            {todo.task}
+          </ItemTitle>
           <ItemDescription className="flex mt-1 break-normal text-muted-foreground">
             {todo.notes ?? null}
           </ItemDescription>

@@ -122,3 +122,27 @@ export async function logSessionDuration(duration: number) {
   revalidatePath("/todo");
   return { success: true };
 }
+
+export async function toggleDone(taskId: string, completed: boolean) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { success: false, error: "not authenticated" };
+
+  const { error } = await supabase
+    .from("todos")
+    .update({ completed: completed })
+    .eq("id", taskId);
+
+  if (error) {
+    console.error("we encountered a problem toggling task done");
+    return {
+      success: false,
+      error: "a problem occured marking task as done",
+    };
+  }
+  revalidatePath("/todo");
+  return { success: true };
+}

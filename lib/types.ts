@@ -5,6 +5,7 @@ export type Task = {
   task: string;
   priority_score: number | null;
   notes?: string | null;
+  completed: boolean;
 };
 
 export type Priorities = Record<string, { score: number; explanation: string }>;
