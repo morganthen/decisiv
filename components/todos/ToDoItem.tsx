@@ -44,8 +44,13 @@ export default function ToDoItem({ onDelete, todo }: ToDoItemProps) {
           <ItemTitle className={checked ? "line-through" : ""}>
             {todo.task}
           </ItemTitle>
-          <ItemDescription className="flex mt-1 break-normal text-muted-foreground">
+          <ItemDescription className="flex mt-1 break-normal text-muted-foreground items-center">
             {todo.notes ?? null}
+            {todo.estimatedDuration != null && (
+              <span className="ml-2 text-xs text-muted-foreground">
+                ~{todo.estimatedDuration} min
+              </span>
+            )}
           </ItemDescription>
         </div>
         <ItemActions className="col-span-1 col-start-5 justify-self-end opacity-50 group-hover:opacity-100 transition-opacity">

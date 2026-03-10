@@ -87,11 +87,16 @@ export async function prioritize() {
   }
 
   await Promise.all(
-    Object.entries(priorities).map(([id, { score, explanation }]) =>
-      supabase
-        .from("todos")
-        .update({ priority_score: score, notes: explanation })
-        .eq("id", id),
+    Object.entries(priorities).map(
+      ([id, { score, explanation, estimatedTime }]) =>
+        supabase
+          .from("todos")
+          .update({
+            priority_score: score,
+            notes: explanation,
+            estimatedDuration: estimatedTime,
+          })
+          .eq("id", id),
     ),
   );
 

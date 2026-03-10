@@ -6,9 +6,13 @@ export type Task = {
   priority_score: number | null;
   notes?: string | null;
   completed: boolean;
+  estimatedDuration?: number | null;
 };
 
-export type Priorities = Record<string, { score: number; explanation: string }>;
+export type Priorities = Record<
+  string,
+  { score: number; explanation: string; estimatedTime: number }
+>;
 
 export type AddTaskState =
   | { success: true }

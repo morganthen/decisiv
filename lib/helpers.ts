@@ -34,9 +34,9 @@ export async function fetchPriorities({ todos }: fetchPrioritiesType) {
           messages: [
             {
               role: "user",
-              content: `Today is ${formattedDate}. Here is a list of tasks:\n${formattedTasks}\nPlease assign a priority score (1 = highest, N = lowest) to each task. Also assign a short explanation as to why you have decided this sequence of importance. Keep the thinking to yourself and ONLY return a JSON object mapping task ids to scores and their respective explanation. Keep the explanations under 30 words. This is the shape of the JSON object I require:\n{
-                "id1": { "score": 1, "explanation": "..." },
-                "id2": { "score": 2, "explanation": "..." }
+              content: `Today is ${formattedDate}. Here is a list of tasks:\n${formattedTasks}\nPlease assign a priority score (1 = highest, N = lowest) to each task. Also assign a short explanation as to why you have decided this sequence of importance. Keep the thinking to yourself and ONLY return a JSON object mapping task ids to scores and their respective explanation WITH a intellectual estimate of how long said task would probably take. Keep the explanations under 40 words. You MUST include a estimated time in minutes needed to complete a task. This is the shape of the JSON object I require:\n{
+                "id1": { "score": 1, "explanation": "...", "estimatedTime": 30 },
+                "id2": { "score": 2, "explanation": "...", "estimatedTime": 45 }
                 }\nRemember no fluff, JUST the JSON object mapping task ids to scores and their respective explanation.`,
             },
           ],
@@ -44,9 +44,10 @@ export async function fetchPriorities({ todos }: fetchPrioritiesType) {
       },
     );
     const data = await response.json();
-    console.log(data);
+    console.log("data", data);
     const explanation = data.choices[0].message.content;
-    console.log(explanation);
+    console.log("explanation:", explanation);
+
     return explanation;
   } catch (err) {
     console.error(err);
