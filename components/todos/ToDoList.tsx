@@ -1,8 +1,10 @@
 "use client";
-import { useEffect } from "react";
+import { startTransition, useActionState, useEffect } from "react";
 import ToDoItem from "./ToDoItem";
 import { DeleteTaskState, Task } from "@/lib/types";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { clearCompletedTasks } from "@/lib/actions";
 
 type ToDoListProps = {
   deleteState: DeleteTaskState;
@@ -10,6 +12,9 @@ type ToDoListProps = {
   onDelete: (formData: FormData) => void;
   isDeleting: boolean;
   isPrioritising: boolean;
+  isBusy: boolean;
+  checkedMap: Record<string | number, boolean>;
+  handleToggleChecked: (todoId: string | number) => void;
 };
 
 export default function ToDoList({
@@ -18,10 +23,23 @@ export default function ToDoList({
   isDeleting,
   todos,
   isPrioritising,
+  isBusy,
+  checkedMap,
+  handleToggleChecked,
 }: ToDoListProps) {
+  const [, clearAll, isClearing] = useActionState(
+    clearCompletedTasks as () => Promise<{ success: boolean; error?: string }>,
+    null,
+  );
+
+  useEffect(() => {
+    if (isClearing === true) {
+      toast("clearing tasks...", { position: "top-center", duration: 1200 });
+    }
+  }, [isClearing]);
+
   useEffect(() => {
     if (isDeleting === true) {
-      console.log("deleting...");
       toast("deleting...", { position: "top-center", duration: 1200 });
     }
   }, [isDeleting]);
@@ -31,16 +49,39 @@ export default function ToDoList({
       toast("there was a problem deleting task");
     }
     if (deleteState?.success) {
-      console.log("task deleted");
       toast.success("task deleted", { position: "top-center", duration: 1200 });
     }
   }, [deleteState]);
 
+  const allCompleted =
+    todos.length > 0 && todos.every((todo) => checkedMap[todo.id]);
+
   return (
     <div className="relative flex flex-col items-center w-full">
       {todos.map((todo) => (
-        <ToDoItem onDelete={onDelete} key={todo.id} todo={todo} />
+        <ToDoItem
+          onDelete={onDelete}
+          key={todo.id}
+          todo={todo}
+          checked={checkedMap[todo.id]}
+          onToggleChecked={() => handleToggleChecked(todo.id)}
+        />
       ))}
+      {allCompleted && !isBusy && (
+        <div className="flex flex-col items-center my-4">
+          <p className="text-sm text-muted-foreground mb-4">great work!</p>
+          <Button
+            disabled={isBusy}
+            onClick={() => {
+              startTransition(() => {
+                clearAll();
+              });
+            }}
+          >
+            clear all tasks
+          </Button>
+        </div>
+      )}
 
       {isPrioritising && (
         <div className="absolute inset-0 bg-background/20 backdrop-blur-sm rounded-l-lg animate-pulse" />

@@ -11,17 +11,22 @@ import {
 } from "@/components/ui/card";
 import { addTask, deleteTask, prioritize } from "@/lib/actions";
 import { AddTaskState, DeleteTaskState, Task } from "@/lib/types";
-import { useActionState, useTransition } from "react";
+import { useActionState, useState, useTransition } from "react";
 import { toast } from "sonner";
 import Timer from "../pomodoro/Timer";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 
 type ToDoClientShellProps = {
   todos: Task[];
 };
 
 export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
+  const [checkedMap, setCheckedMap] = useState<
+    Record<string | number, boolean>
+  >(() => Object.fromEntries(todos.map((todo) => [todo.id, todo.completed])));
+
+  function handleToggleChecked(todoId: string | number) {
+    setCheckedMap((prev) => ({ ...prev, [todoId]: !prev[todoId] }));
+  }
   const [isPrioritising, startPrioritising] = useTransition();
   const [addState, addTaskAction, isAdding] = useActionState<AddTaskState>(
     //the below was very annoying. I needed Claude to help me here
@@ -40,11 +45,14 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
     });
   }
 
+  const allCompleted =
+    todos.length > 0 && todos.every((todo) => checkedMap[todo.id]);
+
   const isBusy = isPrioritising || isAdding || isDeleting;
 
   return (
     <div className="flex md:flex-row-reverse md:gap-4 lg:gap-20 items-center flex-col">
-      <Timer />
+      <Timer allCompleted={allCompleted} />
       <Card className="flex flex-col items-center justify-center lg:w-175 md:w-125 w-106 mb-10">
         {todos.length === 0 ? (
           <CardHeader className="md:w-125 text-center mt-9 w-96">
@@ -52,25 +60,16 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
           </CardHeader>
         ) : null}
         <ToDoList
+          checkedMap={checkedMap}
+          handleToggleChecked={handleToggleChecked}
           todos={todos}
           deleteState={deleteState}
           onDelete={onDelete}
           isDeleting={isDeleting}
           isPrioritising={isPrioritising}
+          isBusy={isBusy}
         />
-        {/* {todos.every((todo) => todo.completed) &&
-          todos.length > 0 &&
-          isBusy === false && (
-            <div className="flex flex-col items-center my-4">
-              <p className="text-sm text-muted-foreground mb-4">great work!</p>
-              <Button
-                disabled={isBusy}
-                onClick={() => console.log("clear task clicked")}
-              >
-                clear all tasks
-              </Button>
-            </div>
-          )} */}
+
         <TaskInputForm
           isBusy={isBusy}
           state={addState}
@@ -78,7 +77,7 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
         />
 
         <CardFooter>
-          {todos.length < 2 ? null : (
+          {todos.length > 2 && !allCompleted && (
             <div>
               <PrioritizeButton
                 isBusy={isBusy}

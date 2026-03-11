@@ -26,7 +26,7 @@ export default function TaskInputForm({
       formRef.current?.reset();
       setTimeout(() => {
         inputRef.current?.focus();
-      }, 500);
+      }, 10);
     }
   }, [state]);
 

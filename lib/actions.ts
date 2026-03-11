@@ -151,3 +151,28 @@ export async function toggleDone(taskId: string, completed: boolean) {
   revalidatePath("/todo");
   return { success: true };
 }
+
+export async function clearCompletedTasks() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { success: false, error: "not authenticated" };
+
+  const { error } = await supabase
+    .from("todos")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("completed", true);
+
+  if (error) {
+    console.error("we encountered a problem clearing tasks");
+    return {
+      success: false,
+      error: "a problem occured clearing tasks",
+    };
+  }
+  revalidatePath("/todo");
+  return { success: true };
+}

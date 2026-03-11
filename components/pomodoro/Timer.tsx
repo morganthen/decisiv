@@ -24,7 +24,7 @@ type TimerStatus =
   | "completed"
   | "stopped";
 
-export default function Timer() {
+export default function Timer({ allCompleted }: { allCompleted: boolean }) {
   const [seconds, setSeconds] = useState(initialSeconds);
   const [isRunning, setIsRunning] = useState(false);
   const [status, setStatus] = useState<TimerStatus>("not started");
@@ -70,6 +70,21 @@ export default function Timer() {
       return () => clearInterval(interval);
     }
   }, [isRunning]);
+
+  useEffect(() => {
+    if (allCompleted) {
+      setIsRunning(false);
+      setStatus("paused");
+      playSound(successAudio, soundOn);
+      toast.success(
+        "all tasks completed! end the timer and take a break! or reset the timer. you do you!",
+        {
+          position: "top-center",
+          duration: 4000,
+        },
+      );
+    }
+  }, [allCompleted]);
 
   useEffect(() => {
     if (status === "completed" && startTime) {
@@ -147,6 +162,7 @@ export default function Timer() {
     setIsRunning(false);
     // setSeconds(initialSeconds);
     setStatus("stopped");
+    setSeconds(initialSeconds);
 
     if (startTime) {
       const endTime = new Date();

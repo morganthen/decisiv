@@ -6,7 +6,7 @@ import { Trash } from "lucide-react";
 
 import { Task } from "@/lib/types";
 import { toggleDone } from "@/lib/actions";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { CardAction } from "../ui/card";
 import { Badge } from "../ui/badge";
 
@@ -22,22 +22,28 @@ import {
 } from "@/components/ui/dialog";
 
 type ToDoItemProps = {
+  checked: boolean;
+  onToggleChecked: () => void;
   onDelete: (formData: FormData) => void;
   todo: Task;
 };
 
-export default function ToDoItem({ onDelete, todo }: ToDoItemProps) {
+export default function ToDoItem({
+  checked,
+  onToggleChecked,
+  onDelete,
+  todo,
+}: ToDoItemProps) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [checked, setChecked] = useState(todo.completed);
 
   function handleSubmit() {
     formRef.current?.requestSubmit();
-    setChecked((prev) => !prev);
+    onToggleChecked();
   }
 
   return (
     <div className="group">
-      <Item className="grid grid-cols-6 md:w-105 min-w-100 justify-between lg:w-145 w-90">
+      <Item className="grid grid-cols-6 md:w-105 min-w-100 justify-between lg:w-145 w-90 gap-4">
         <form
           className="contents"
           ref={formRef}
@@ -50,7 +56,7 @@ export default function ToDoItem({ onDelete, todo }: ToDoItemProps) {
             type="checkbox"
             name="completed"
             className="col-span-1 col-start-1 opacity-50 group-hover:opacity-100 transition-opacity accent-primary m-0 p-0"
-            defaultChecked={todo.completed}
+            defaultChecked={checked}
             onChange={() => handleSubmit()}
           />
         </form>
@@ -66,12 +72,12 @@ export default function ToDoItem({ onDelete, todo }: ToDoItemProps) {
             {todo.notes ?? null}
           </ItemDescription>
         </div>
-        <div className="col-span-1 col-start-6">
+        <div className="col-span-1 col-start-6 ml-10">
           {todo.estimatedDuration != null && (
-            <CardAction className="ml-2 text-xs justify-se">
+            <CardAction className="ml-2 text-xs ">
               <Badge
                 variant={`${checked ? "ghost" : "outline"}`}
-                className={`${checked ? "line-through text-muted" : " text-muted-foreground"} `}
+                className={`${checked ? "line-through text-muted" : " text-muted-foreground"} min-w-17`}
               >
                 ~{todo.estimatedDuration} min
               </Badge>
