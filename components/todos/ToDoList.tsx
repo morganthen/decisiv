@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect } from "react";
 import ToDoItem from "./ToDoItem";
 import { DeleteTaskState, Task } from "@/lib/types";
@@ -21,13 +20,21 @@ export default function ToDoList({
   isPrioritising,
 }: ToDoListProps) {
   useEffect(() => {
-    if (isDeleting === true)
-      toast.info("deleting...", { position: "top-center", duration: 1200 });
-    if (deleteState && deleteState.success === false && deleteState.error)
+    if (isDeleting === true) {
+      console.log("deleting...");
+      toast("deleting...", { position: "top-center", duration: 1200 });
+    }
+  }, [isDeleting]);
+
+  useEffect(() => {
+    if (deleteState && deleteState.success === false && deleteState.error) {
       toast("there was a problem deleting task");
-    if (deleteState?.success)
+    }
+    if (deleteState?.success) {
+      console.log("task deleted");
       toast.success("task deleted", { position: "top-center", duration: 1200 });
-  }, [deleteState, isDeleting]);
+    }
+  }, [deleteState]);
 
   return (
     <div className="relative flex flex-col items-center w-full">

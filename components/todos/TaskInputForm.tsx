@@ -19,9 +19,15 @@ export default function TaskInputForm({
   isBusy,
 }: TaskInputFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (state?.success === true) formRef.current?.reset();
+    if (state?.success === true) {
+      formRef.current?.reset();
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 500);
+    }
   }, [state]);
 
   useEffect(() => {
@@ -40,6 +46,7 @@ export default function TaskInputForm({
         <form action={formAction} ref={formRef}>
           <CardContent>
             <Input
+              ref={inputRef}
               name="task"
               required
               placeholder="add a task"

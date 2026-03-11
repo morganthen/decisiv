@@ -15,7 +15,7 @@ const presetSeconds = {
   "90min": 90 * 60,
 };
 
-const initialSeconds = presetSeconds["rest"];
+const initialSeconds = presetSeconds["25min"];
 
 type TimerStatus =
   | "not started"
@@ -109,7 +109,7 @@ export default function Timer() {
       status === "completed"
     ) {
       playSound(clickAudio, soundOn);
-      setSeconds(initialSeconds); // Only reset for a new session
+      // setSeconds(initialSeconds); // Only reset for a new session
       setIsRunning(true);
       setStatus("running");
       setStartTime(new Date());

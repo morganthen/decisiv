@@ -14,6 +14,8 @@ import { AddTaskState, DeleteTaskState, Task } from "@/lib/types";
 import { useActionState, useTransition } from "react";
 import { toast } from "sonner";
 import Timer from "../pomodoro/Timer";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 type ToDoClientShellProps = {
   todos: Task[];
@@ -43,7 +45,7 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
   return (
     <div className="flex md:flex-row-reverse md:gap-4 lg:gap-20 items-center flex-col">
       <Timer />
-      <Card className="flex flex-col items-center justify-center lg:w-175 md:w-125 w-96 my-10">
+      <Card className="flex flex-col items-center justify-center lg:w-175 md:w-125 w-106 mb-10">
         {todos.length === 0 ? (
           <CardHeader className="md:w-125 text-center mt-9 w-96">
             <CardDescription>add a few tasks to begin...</CardDescription>
@@ -56,6 +58,19 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
           isDeleting={isDeleting}
           isPrioritising={isPrioritising}
         />
+        {/* {todos.every((todo) => todo.completed) &&
+          todos.length > 0 &&
+          isBusy === false && (
+            <div className="flex flex-col items-center my-4">
+              <p className="text-sm text-muted-foreground mb-4">great work!</p>
+              <Button
+                disabled={isBusy}
+                onClick={() => console.log("clear task clicked")}
+              >
+                clear all tasks
+              </Button>
+            </div>
+          )} */}
         <TaskInputForm
           isBusy={isBusy}
           state={addState}
