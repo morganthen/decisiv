@@ -25,6 +25,7 @@ type ToDoItemProps = {
   onToggleChecked: () => void;
   onDelete: (formData: FormData) => void;
   todo: Task;
+  isDeleting: boolean;
 };
 
 export default function ToDoItem({
@@ -32,6 +33,7 @@ export default function ToDoItem({
   onToggleChecked,
   onDelete,
   todo,
+  isDeleting,
 }: ToDoItemProps) {
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -98,13 +100,15 @@ export default function ToDoItem({
 
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline">cancel</Button>
               </DialogClose>
               {/*   //using "contents" here so that the button doesn't get wrapped in an extra div, which would break the styling */}
               <form className="contents">
                 <input name="id" type="hidden" value={todo.id} />
 
-                <Button formAction={onDelete}>Delete</Button>
+                <Button formAction={onDelete} disabled={isDeleting}>
+                  {isDeleting ? "deleting..." : "delete"}
+                </Button>
               </form>
             </DialogFooter>
           </DialogContent>

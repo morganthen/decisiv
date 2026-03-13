@@ -22,7 +22,6 @@ export default function ToDoList({
   onDelete,
   isDeleting,
   todos,
-  isPrioritising,
   isBusy,
   checkedMap,
   handleToggleChecked,
@@ -60,6 +59,7 @@ export default function ToDoList({
     <div className="flex flex-col items-center min-w-0 w-full">
       {todos.map((todo) => (
         <ToDoItem
+          isDeleting={isDeleting}
           onDelete={onDelete}
           key={todo.id}
           todo={todo}
