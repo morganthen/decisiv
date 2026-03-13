@@ -7,7 +7,6 @@ import { Trash } from "lucide-react";
 import { Task } from "@/lib/types";
 import { toggleDone } from "@/lib/actions";
 import { useRef } from "react";
-import { CardAction } from "../ui/card";
 import { Badge } from "../ui/badge";
 
 import {
@@ -42,79 +41,75 @@ export default function ToDoItem({
   }
 
   return (
-    <div className="group">
-      <Item className="grid grid-cols-6 md:w-105 min-w-100 justify-between lg:w-145 w-90 gap-4">
-        <form
-          className="contents"
-          ref={formRef}
-          action={async (formData: FormData) => {
-            const checked = formData.get("completed") === "on";
-            await toggleDone(todo.id, checked);
-          }}
+    <Item className="flex w-full min-w-0">
+      <form
+        className="contents"
+        ref={formRef}
+        action={async (formData: FormData) => {
+          const checked = formData.get("completed") === "on";
+          await toggleDone(todo.id, checked);
+        }}
+      >
+        <input
+          type="checkbox"
+          name="completed"
+          className="opacity-50 group-hover:opacity-100 transition-opacity accent-primary mr-4"
+          defaultChecked={checked}
+          onChange={() => handleSubmit()}
+        />
+      </form>
+      <div className="flex flex-1 flex-col min-w-0">
+        <ItemTitle
+          className={`${checked ? "line-through text-muted-foreground" : ""} text-wrap `}
         >
-          <input
-            type="checkbox"
-            name="completed"
-            className="col-span-1 col-start-1 opacity-50 group-hover:opacity-100 transition-opacity accent-primary m-0 p-0"
-            defaultChecked={checked}
-            onChange={() => handleSubmit()}
-          />
-        </form>
-        <div className="flex flex-col col-span-4 col-start-2 pr-4">
-          <ItemTitle
-            className={checked ? "line-through text-muted-foreground" : ""}
-          >
-            {todo.task}
-          </ItemTitle>
-          <ItemDescription
-            className={`${checked ? "line-through text-muted" : "text-muted-foreground"} flex mt-1 break-normal justify-between items-center`}
-          >
-            {todo.notes ?? null}
-          </ItemDescription>
-        </div>
-        <div className="col-span-1 col-start-6 ml-10">
-          {todo.estimatedDuration != null && (
-            <CardAction className="ml-2 text-xs ">
-              <Badge
-                variant={`${checked ? "ghost" : "outline"}`}
-                className={`${checked ? "line-through text-muted" : " text-muted-foreground"} min-w-17`}
-              >
-                ~{todo.estimatedDuration} min
-              </Badge>
-            </CardAction>
-          )}
-        </div>
-        <ItemActions className="col-span-1 col-start-7 justify-self-end opacity-50 group-hover:opacity-100 transition-opacity">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="destructive" size="sm">
-                <Trash></Trash>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-sm">
-              <DialogHeader>
-                <DialogTitle>deleting task</DialogTitle>
-                <DialogDescription>
-                  are you sure? this action cannot be undone, but you can always
-                  add the task again if you want.
-                </DialogDescription>
-              </DialogHeader>
+          {todo.task}
+        </ItemTitle>
 
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                {/*   //using "contents" here so that the button doesn't get wrapped in an extra div, which would break the styling */}
-                <form className="contents">
-                  <input name="id" type="hidden" value={todo.id} />
+        <ItemDescription
+          className={`${checked ? "line-through text-muted" : "text-muted-foreground"} text-wrap flex mb-1`}
+        >
+          {todo.notes ?? null}
+        </ItemDescription>
+        {todo.estimatedDuration != null && (
+          <Badge
+            variant={`${checked ? "ghost" : "outline"}`}
+            className={`${checked ? "line-through text-muted" : " text-muted-foreground"} min-w-0`}
+          >
+            ~{todo.estimatedDuration} min
+          </Badge>
+        )}
+      </div>
 
-                  <Button formAction={onDelete}>Delete</Button>
-                </form>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </ItemActions>
-      </Item>
-    </div>
+      <ItemActions className="opacity-50 group-hover:opacity-100 transition-opacity">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="destructive" size="sm">
+              <Trash></Trash>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-sm">
+            <DialogHeader>
+              <DialogTitle>deleting task</DialogTitle>
+              <DialogDescription>
+                are you sure? this action cannot be undone, but you can always
+                add the task again if you want.
+              </DialogDescription>
+            </DialogHeader>
+
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+              {/*   //using "contents" here so that the button doesn't get wrapped in an extra div, which would break the styling */}
+              <form className="contents">
+                <input name="id" type="hidden" value={todo.id} />
+
+                <Button formAction={onDelete}>Delete</Button>
+              </form>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </ItemActions>
+    </Item>
   );
 }

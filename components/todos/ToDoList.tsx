@@ -57,7 +57,7 @@ export default function ToDoList({
     todos.length > 0 && todos.every((todo) => checkedMap[todo.id]);
 
   return (
-    <div className="relative flex flex-col items-center w-full">
+    <div className="flex flex-col items-center min-w-0 w-full">
       {todos.map((todo) => (
         <ToDoItem
           onDelete={onDelete}
@@ -81,10 +81,6 @@ export default function ToDoList({
             clear all tasks
           </Button>
         </div>
-      )}
-
-      {isPrioritising && (
-        <div className="absolute inset-0 bg-background/20 backdrop-blur-sm rounded-l-lg animate-pulse" />
       )}
     </div>
   );
