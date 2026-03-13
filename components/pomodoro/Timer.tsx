@@ -72,12 +72,12 @@ export default function Timer({ allCompleted }: { allCompleted: boolean }) {
   }, [isRunning]);
 
   useEffect(() => {
-    if (allCompleted) {
+    if (allCompleted && status !== "not started") {
       setIsRunning(false);
       setStatus("paused");
       playSound(successAudio, soundOn);
       toast.success(
-        "all tasks completed! end the timer and take a break! or reset the timer. you do you!",
+        "all tasks completed! take a break! or reset the timer. you do you!",
         {
           position: "top-center",
           duration: 4000,
@@ -187,7 +187,7 @@ export default function Timer({ allCompleted }: { allCompleted: boolean }) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center my-8 gap-3 relative">
+    <div className="flex flex-col items-center justify-center my-8 gap-3 relative md:mr-2">
       <Button
         className="absolute top-13 right-8 text-muted-foreground"
         variant="ghost"

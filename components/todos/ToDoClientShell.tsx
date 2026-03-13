@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { addTask, deleteTask, prioritize } from "@/lib/actions";
 import { AddTaskState, DeleteTaskState, Task } from "@/lib/types";
-import { useActionState, useState, useTransition } from "react";
+import { useActionState, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import Timer from "../pomodoro/Timer";
 
@@ -41,9 +41,18 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
   function handlePrioritise() {
     startPrioritising(async () => {
       await prioritize();
-      toast("refreshing list");
+      toast("refreshing list", { position: "top-center" });
     });
   }
+
+  useEffect(() => {
+    const toastId = "prioritising-toast";
+    if (isPrioritising) {
+      toast.loading("prioritising", { id: toastId, position: "top-center" });
+    } else {
+      toast.dismiss(toastId);
+    }
+  }, [isPrioritising]);
 
   const allCompleted =
     todos.length > 0 && todos.every((todo) => checkedMap[todo.id]);
@@ -51,9 +60,9 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
   const isBusy = isPrioritising || isAdding || isDeleting;
 
   return (
-    <div className="flex md:flex-row-reverse md:gap-4 lg:gap-20 items-center flex-col">
+    <div className="flex md:flex-row-reverse md:gap-12 lg:gap-20 items-center flex-col w-full max-w-4xl mx-2">
       <Timer allCompleted={allCompleted} />
-      <Card className="flex flex-col items-center justify-center lg:w-175 md:w-125 w-106 mb-10">
+      <Card className="flex flex-col items-center justify-center w-full mb-10 min-w-0 min-h-0 md:ml-2">
         {todos.length === 0 ? (
           <CardHeader className="md:w-125 text-center mt-9 w-96">
             <CardDescription>add a few tasks to begin...</CardDescription>
@@ -88,6 +97,9 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
           )}
         </CardFooter>
       </Card>
+      {isPrioritising && (
+        <div className="absolute inset-0 bg-background/20 backdrop-blur-sm rounded-l-lg animate-pulse" />
+      )}
     </div>
   );
 }
