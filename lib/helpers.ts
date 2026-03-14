@@ -2,9 +2,13 @@ import { Task } from "./types";
 
 type fetchPrioritiesType = {
   todos: Pick<Task, "id" | "task">[];
+  userContext?: string;
 };
 
-export async function fetchPriorities({ todos }: fetchPrioritiesType) {
+export async function fetchPriorities({
+  todos,
+  userContext,
+}: fetchPrioritiesType) {
   const dateObj = new Date();
 
   const formattedDate = dateObj.toLocaleDateString("en-US", {
@@ -34,7 +38,7 @@ export async function fetchPriorities({ todos }: fetchPrioritiesType) {
           messages: [
             {
               role: "user",
-              content: `Today is ${formattedDate}. Here is a list of tasks:\n${formattedTasks}\nPlease assign a priority score (1 = highest, N = lowest) to each task. Also assign a short explanation as to why you have decided this sequence of importance. Keep the thinking to yourself and ONLY return a JSON object mapping task ids to scores and their respective explanation WITH a intellectual estimate of how long said task would probably take. Keep the explanations under 40 words. You MUST include a estimated time in minutes needed to complete a task. This is the shape of the JSON object I require:\n{
+              content: `${userContext ? `User profile/context:\n${userContext}\n\n` : ""}Today is ${formattedDate}. Here is a list of tasks:\n${formattedTasks}\nPlease assign a priority score (1 = highest, N = lowest) to each task. Also assign a short explanation as to why you have decided this sequence of importance. Keep the thinking to yourself and ONLY return a JSON object mapping task ids to scores and their respective explanation WITH a intellectual estimate of how long said task would probably take. Keep the explanations under 40 words. You MUST include a estimated time in minutes needed to complete a task. This is the shape of the JSON object I require:\n{
                 "id1": { "score": 1, "explanation": "...", "estimatedTime": 30 },
                 "id2": { "score": 2, "explanation": "...", "estimatedTime": 45 }
                 }\nRemember no fluff, JUST the JSON object mapping task ids to scores and their respective explanation.`,

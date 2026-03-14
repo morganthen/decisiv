@@ -1,12 +1,11 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter } from "../ui/card";
+import { CardDescription } from "../ui/card";
 
 import { toast } from "sonner";
 import { useEffect, useRef, useState } from "react";
 import { AddTaskState } from "@/lib/types";
-import { Button } from "../ui/button";
+
 import {
   InputGroup,
   InputGroupAddon,
@@ -53,40 +52,34 @@ export default function TaskInputForm({
 
   return (
     <div className="w-full min-w-0 flex flex-col justify-center px-8">
-      <Card>
-        <form action={formAction} ref={formRef}>
-          <CardContent>
-            <InputGroup>
-              <InputGroupInput
-                ref={inputRef}
-                name="task"
-                required
-                placeholder="add a task"
-                disabled={isBusy}
-                className={isBusy ? "bg-card" : ""}
-                value={taskValue}
-                onChange={(e) => setTaskValue(e.target.value)}
-              />
-              <InputGroupAddon align="inline-end">
-                <InputGroupButton
-                  disabled={taskValue.trim().length === 0}
-                  type="submit"
-                  className="bg-primary"
-                >
-                  <ArrowRight className="text-foreground"></ArrowRight>
-                </InputGroupButton>
-              </InputGroupAddon>
-            </InputGroup>
-          </CardContent>
-          <CardFooter className="flex justify-center mt-4">
-            {state && state.success === false && state.error ? (
-              <CardDescription>
-                <p>there&apos; been an error</p>
-              </CardDescription>
-            ) : null}
-          </CardFooter>
-        </form>
-      </Card>
+      <form action={formAction} ref={formRef}>
+        <InputGroup>
+          <InputGroupInput
+            ref={inputRef}
+            name="task"
+            required
+            placeholder="add a task"
+            disabled={isBusy}
+            className={isBusy ? "bg-card" : ""}
+            value={taskValue}
+            onChange={(e) => setTaskValue(e.target.value)}
+          />
+          <InputGroupAddon align="inline-end">
+            <InputGroupButton
+              disabled={taskValue.trim().length === 0 || isBusy}
+              type="submit"
+              className="bg-primary"
+            >
+              <ArrowRight className="text-foreground"></ArrowRight>
+            </InputGroupButton>
+          </InputGroupAddon>
+        </InputGroup>
+        {state && state.success === false && state.error ? (
+          <CardDescription className="flex justify-center mt-4">
+            <p>there&apos;s been an error</p>
+          </CardDescription>
+        ) : null}
+      </form>
     </div>
   );
 }

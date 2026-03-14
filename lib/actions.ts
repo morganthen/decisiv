@@ -69,8 +69,15 @@ export async function prioritize() {
   const todos = (response.data ?? []) as Pick<Task, "id" | "task">[];
 
   if (!todos) return { success: false, error: "No todos found" };
+  const { data: setting } = await supabase
+    .from("settings")
+    .select("user_context")
+    .eq("user_id", user.id)
+    .maybeSingle();
 
-  const llmResult = await fetchPriorities({ todos });
+  const userContext = setting?.user_context ?? "";
+
+  const llmResult = await fetchPriorities({ todos, userContext });
 
   let cleaned = llmResult.trim();
   // Remove code block markers if present
@@ -175,4 +182,24 @@ export async function clearCompletedTasks() {
   }
   revalidatePath("/todo");
   return { success: true };
+}
+
+export default async function saveContext(formData: FormData): Promise<void> {
+  const context = String(formData.get("context") ?? "").trim();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("not authenticated");
+  const { data, error } = await supabase
+    .from("settings")
+    .upsert([{ user_id: user.id, user_context: context }], {
+      onConflict: "user_id",
+      ignoreDuplicates: false, //  always update if exists
+    });
+  if (error) {
+    console.error("we encountered a problem saving context");
+  }
+  console.log(data, error);
+  revalidatePath("/settings");
 }

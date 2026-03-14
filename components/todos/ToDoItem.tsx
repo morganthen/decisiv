@@ -26,6 +26,7 @@ type ToDoItemProps = {
   onDelete: (formData: FormData) => void;
   todo: Task;
   isDeleting: boolean;
+  isBusy: boolean;
 };
 
 export default function ToDoItem({
@@ -34,6 +35,7 @@ export default function ToDoItem({
   onDelete,
   todo,
   isDeleting,
+  isBusy,
 }: ToDoItemProps) {
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -53,6 +55,7 @@ export default function ToDoItem({
         }}
       >
         <input
+          disabled={isBusy}
           type="checkbox"
           name="completed"
           className="opacity-50 group-hover:opacity-100 transition-opacity accent-primary mr-4"
@@ -85,7 +88,7 @@ export default function ToDoItem({
       <ItemActions className="opacity-50 group-hover:opacity-100 transition-opacity">
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="destructive" size="sm">
+            <Button variant="destructive" size="sm" disabled={isBusy}>
               <Trash></Trash>
             </Button>
           </DialogTrigger>

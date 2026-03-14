@@ -65,7 +65,9 @@ export default function ToDoClientShell({ todos }: ToDoClientShellProps) {
       <Card className="flex flex-col items-center justify-center w-full mb-10 min-w-0 min-h-0 md:ml-2">
         {todos.length === 0 ? (
           <CardHeader className="md:w-125 text-center mt-9 w-96">
-            <CardDescription>add a few tasks to begin...</CardDescription>
+            <CardDescription>
+              no tasks yet? add a few below to begin...
+            </CardDescription>
           </CardHeader>
         ) : null}
         <ToDoList

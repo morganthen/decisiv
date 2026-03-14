@@ -56,9 +56,10 @@ export default function ToDoList({
     todos.length > 0 && todos.every((todo) => checkedMap[todo.id]);
 
   return (
-    <div className="flex flex-col items-center min-w-0 w-full">
+    <div className="flex flex-col items-center min-w-0 w-full px-6">
       {todos.map((todo) => (
         <ToDoItem
+          isBusy={isBusy}
           isDeleting={isDeleting}
           onDelete={onDelete}
           key={todo.id}
