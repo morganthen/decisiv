@@ -4,6 +4,8 @@
 
 Decisiv is a full-stack task management app that uses Meta's Llama 4 Maverick (17B) model to score and rank tasks by priority. Built originally as a learning project, the idea came from a real problem: a friend who produces music had dozens of small tasks piling up with no clear starting point. Decision paralysis is real, and sorting by deadline doesn't solve it. Decisiv lets users add personal context so the AI ranks tasks against their actual situation, not just the order they were entered.
 
+![screenshot](public/screenshots/decisiv-v2.png)
+
 ---
 
 ## 🚀 Key Features
@@ -58,3 +60,5 @@ Having a first-class server-side primitive in Next.js made it natural to keep se
 ## 📌 Status
 
 decisiv is in active personal use. Planned improvements include task editing, priority history, and smarter context-weighting in the prompt.
+
+Built by [Morgan Then](https://morganthen.vercel.app) · [LinkedIn](https://linkedin.com/in/morganthen) · [GitHub](https://github.com/morganthen)
