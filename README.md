@@ -1,8 +1,8 @@
 > "The to-do app is a rite of passage. I just wanted mine to be useful."
 
-# Decisiv | AI-Prioritised Task Manager
+# decisiv | AI-Prioritised Task Manager
 
-Decisiv is a full-stack task management app that uses Meta's Llama 4 Maverick (17B) model to score and rank tasks by priority. Built originally as a learning project, the idea came from a real problem: a friend who produces music had dozens of small tasks piling up with no clear starting point. Decision paralysis is real, and sorting by deadline doesn't solve it. Decisiv lets users add personal context so the AI ranks tasks against their actual situation, not just the order they were entered.
+decisiv is a full-stack task management app that uses Meta's Llama 4 Maverick (17B) model to score and rank tasks by priority. Built originally as a learning project, the idea came from a real problem: a friend who produces music had dozens of small tasks piling up with no clear starting point. Decision paralysis is real, and sorting by deadline doesn't solve it. decisiv lets users add personal context so the AI ranks tasks against their actual situation, not just the order they were entered.
 
 ![screenshot](public/screenshots/decisiv-v2.png)
 
