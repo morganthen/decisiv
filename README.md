@@ -35,13 +35,13 @@ Decisiv is a full-stack task management app that uses Meta's Llama 4 Maverick (1
 ## 🤕 Challenges Overcome
 
 **Getting reliable structured output from the LLM**
-The core challenge wasn't calling the API — it was making the output trustworthy. The model needed to return a consistently shaped JSON object with priority scores and explanations for each task. Getting that output shape reliable under varied inputs took real iteration on the prompt. I learned that prompt engineering is less about clever wording and more about constraint: the more precisely you define the contract, the less the model wanders.
+The core challenge wasn't calling the API, rather it was making the output trustworthy. The model needed to return a consistently shaped JSON object with priority scores and explanations for each task. Getting that output shape reliable under varied inputs took real iteration on the prompt. I learned that prompt engineering is less about clever wording and more about constraint: the more precisely you define the contract, the less the model wanders.
 
 **Running AI server-side via Server Actions**
-Keeping LLM calls server-side was a deliberate decision — it keeps the API key out of the client and gives me a clean place to validate the response before it touches the UI. Wiring this up through Next.js Server Actions rather than a traditional API route was a useful exercise in understanding where logic actually belongs in the App Router model.
+Keeping LLM calls server-side was a deliberate decision. It keeps the API key out of the client and gives me a clean place to validate the response before it touches the UI. Wiring this up through Next.js Server Actions rather than a traditional API route was a useful exercise in understanding where logic actually belongs in the App Router model.
 
 **Avoiding redundant auth requests**
-The dashboard and task list both needed the authenticated user. Without caching, that meant duplicate Supabase round-trips on every load. I memoized the server-side client and user lookup so the auth call happens once per request cycle — a small change with a noticeable impact on perceived load time.
+The dashboard and task list both needed the authenticated user. Without caching, that meant duplicate Supabase round-trips on every load. I memoized the server-side client and user lookup so the auth call happens once per request cycle. A small change but I felt it has a noticeable impact on perceived load time.
 
 ---
 
@@ -57,4 +57,4 @@ Having a first-class server-side primitive in Next.js made it natural to keep se
 
 ## 📌 Status
 
-Decisiv is in active personal use. Planned improvements include task editing, priority history, and smarter context-weighting in the prompt.
+decisiv is in active personal use. Planned improvements include task editing, priority history, and smarter context-weighting in the prompt.
